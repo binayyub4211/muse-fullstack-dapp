@@ -1,4 +1,20 @@
+import { useArtworks, ArtworksFilters, type { Artwork, ArtworksResponse } } from '@/services/artworkService'
+
+import { ArtworkGrid } from '@/components/ArtworkGrid'
+
 export function HomePage() {
+  const filters = { sortBy: 'popular' } as ArtworksFilters
+
+  const {
+    data: featuredData,
+    isLoading: featuredLoading,
+    isFetchingNextPage: featuredFetchingNext,
+  } = useArtworks(filters, {
+    getNextPageParam: () => undefined,
+  })
+
+  const featuredArtworks: Artwork[] = featuredData?.pages.flatMap((page: ArtworksResponse) => page.data) || []
+
   return (
     <div className="min-h-screen bg-background">
       <div className="mobile-section">
@@ -14,9 +30,9 @@ export function HomePage() {
           </p>
           
           <div className="flex flex-col gap-3 mobile-container">
-            <button className="btn-primary w-full text-base font-medium">
+            <a href="/explore" className="btn-primary w-full text-base font-medium">
               Start Exploring
-            </button>
+            </a>
             <button className="btn-outline w-full text-base font-medium">
               Create Art
             </button>
@@ -26,24 +42,18 @@ export function HomePage() {
       
       <div className="mobile-section">
         <h2 className="subheading-mobile mb-6">Featured Artworks</h2>
-        <div className="grid-mobile xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="card-mobile">
-              <div className="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg mb-4" />
-              <div className="space-y-2">
-                <h3 className="font-semibold text-secondary-900 text-mobile-base">AI Artwork #{i}</h3>
-                <p className="text-secondary-600 text-mobile-sm">Generated with AI Model</p>
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-mobile-sm text-secondary-500 font-medium">0.1 ETH</span>
-                  <button className="btn-primary text-mobile-sm px-4 py-2 touch-manipulation">
-                    View
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <ArtworkGrid
+          artworks={featuredArtworks.slice(0, 6)}
+          isLoading={featuredLoading}
+          hasNextPage={false}
+          isFetchingNextPage={featuredFetchingNext}
+          onLoadMore={() => {}}
+          onPurchase={(artwork) => console.log('Purchase featured:', artwork)}
+          onClearFilters={() => {}}
+          hasFilters={false}
+        />
       </div>
     </div>
   )
 }
+
