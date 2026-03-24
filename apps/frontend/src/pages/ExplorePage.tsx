@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useArtworks, type Artwork, type ArtworksFilters } from '@/services/artworkService'
-import { ArtworkGrid } from '@/components/ArtworkGrid'
+import { ArtworkGallery } from '@/components/composite/ArtworkGallery'
 import { Search, Filter } from 'lucide-react'
 
 export function ExplorePage() {
@@ -74,7 +74,7 @@ export function ExplorePage() {
       </div>
 
       <div className="mobile-section pt-0">
-        <ArtworkGrid
+        <ArtworkGallery
           artworks={artworks}
           isLoading={isLoading}
           hasNextPage={!!hasNextPage}
