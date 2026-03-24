@@ -1,4 +1,27 @@
+import { Button } from '@/components/ui/Button'
+import { Grid } from '@/components/layout/Grid'
+import { ArtworkCard } from '@/components/artwork/ArtworkCard'
+
+// Mock data for demonstration
+const mockArtworks = Array.from({ length: 6 }, (_, i) => ({
+  id: `mock-${i + 1}`,
+  title: `AI Artwork #${i + 1}`,
+  description: 'Generated with AI Model',
+  imageUrl: '',
+  price: '0.1',
+  currency: 'ETH',
+  creator: `Artist ${i + 1}`
+}))
+
 export function HomePage() {
+  const handleArtworkView = (artwork: typeof mockArtworks[0]) => {
+    console.log('View artwork:', artwork)
+  }
+
+  const handleArtworkPurchase = (artwork: typeof mockArtworks[0]) => {
+    console.log('Purchase artwork:', artwork)
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="mobile-section">
@@ -14,35 +37,31 @@ export function HomePage() {
           </p>
           
           <div className="flex flex-col gap-3 mobile-container">
-            <button className="btn-primary w-full text-base font-medium">
+            <Button variant="primary" size="md" fullWidth>
               Start Exploring
-            </button>
-            <button className="btn-outline w-full text-base font-medium">
+            </Button>
+            <Button variant="outline" size="md" fullWidth>
               Create Art
-            </button>
+            </Button>
           </div>
         </div>
       </div>
       
       <div className="mobile-section">
         <h2 className="subheading-mobile mb-6">Featured Artworks</h2>
-        <div className="grid-mobile xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="card-mobile">
-              <div className="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg mb-4" />
-              <div className="space-y-2">
-                <h3 className="font-semibold text-secondary-900 text-mobile-base">AI Artwork #{i}</h3>
-                <p className="text-secondary-600 text-mobile-sm">Generated with AI Model</p>
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-mobile-sm text-secondary-500 font-medium">0.1 ETH</span>
-                  <button className="btn-primary text-mobile-sm px-4 py-2 touch-manipulation">
-                    View
-                  </button>
-                </div>
-              </div>
-            </div>
+        <Grid responsive gap="md">
+          {mockArtworks.map((artwork) => (
+            <ArtworkCard
+              key={artwork.id}
+              artwork={artwork}
+              variant="default"
+              onView={handleArtworkView}
+              onPurchase={handleArtworkPurchase}
+              showPrice={true}
+              showCreator={false}
+            />
           ))}
-        </div>
+        </Grid>
       </div>
     </div>
   )
